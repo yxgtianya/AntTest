@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="AntDemo" default="junit" basedir=".">
+<property name="src.path" value="src/main/java"/>
+<property name="build.path" value="bin"/>
+<property name="test.path" value="src/test/java"/>
+<property name="report.path" value="report"/>
+
+<path id="compile.path">
+	<pathelement path="C:/Users/yxg/.m2/repository/junit/junit/3.8.1/junit-3.8.1.jar"/>
+	<pathelement path="${build.path}"/>
+</path>
+
+<target name="clean" description="clean">
+	<delete dir="${build.path}"/>
+</target>
+
+<target name="compile" description="compile">
+	<mkdir dir="${build.path}"/>
+	<javac srcdir="${src.path}" destdir="${build.path}" classpathref="compile.path" includeAntRuntime="false"/>
+	<javac srcdir="${test.path}" destdir="${build.path}" classpathref="compile.path" includeAntRuntime="false"/>
+</target>
+ 
+<target name="junit" depends="clean,compile">
+    <mkdir dir="${report.path}"/>
+	<junit printsummary="true" >
+	    <formatter type="xml" usefile="true"/>
+		<classpath refid="compile.path"/>
+			<batchtest fork="on" todir="${report.path}" haltonfailure="no">
+				<fileset dir="${build.path}">
+				    <include name="**/*Test.class"/>
+				</fileset>
+			</batchtest>
+	</junit>
+	
+	<junitreport todir="${report.path}">
+	    <fileset dir="${report.path}">
+	        <include name="TEST-*.xml" />
+	    </fileset>
+	    <report format="frames" todir="${report.path}"/>
+	</junitreport>
+</target>
+
+<target name="deletereport">
+    <delete dir="${report.path}"/>
+</target>
+
+</project>
